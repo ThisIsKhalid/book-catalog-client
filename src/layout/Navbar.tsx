@@ -1,9 +1,11 @@
 import {Link} from 'react-router-dom'
+import { BsCart3 } from "react-icons/bs";
+import { CgProfile } from "react-icons/cg";
 
 const Navbar = () => {
     return (
-      <section className="grid md:grid-cols-2 grid-cols-1 md:gap-3">
-        <div className="px-10 py-2 bg-customGray flex justify-between items-center rounded-t-xl shadow-xl">
+      <section className="grid md:grid-cols-2 grid-cols-1 md:gap-5">
+        <div className="px-10 py-2 bg-customGray flex justify-between items-center rounded-t-xl shadow-lg">
           <h1 className="text-base font-medium underline underline-offset-4">
             <span className="text-5xl font-bold">B</span>land
           </h1>
@@ -14,7 +16,14 @@ const Navbar = () => {
             <Link to="/">Signup</Link>
           </div>
         </div>
-        <div className="px-10 py-2 bg-customApricot rounded-t-xl shadow-xl hidden md:flex"></div>
+        <div className="px-10 py-2 bg-customApricot rounded-t-xl shadow-lg hidden md:flex items-center justify-end gap-5 font-medium text-xl">
+          <div className="tooltip" data-tip="Cart">
+            <BsCart3 />
+          </div>
+          <div className="tooltip" data-tip="Profile">
+            <CgProfile />
+          </div>
+        </div>
       </section>
     );
 };

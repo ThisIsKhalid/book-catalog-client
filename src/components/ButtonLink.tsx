@@ -11,7 +11,7 @@ const ButtonLink: React.FC<ButtonLinkProps> = ({ to, children, className }) => {
   return (
     <Link
       to={to}
-      className={`relative inline-flex items-center px-8 py-2 overflow-hidden text-base font-medium text-gray-800 border-2 border-gray-800 rounded-full hover:text-white group hover:bg-gray-50 ${className}`}
+      className={`relative inline-flex items-center px-10 py-3 overflow-hidden text-base font-medium text-gray-800 border-2 border-gray-800 rounded-full hover:text-white group hover:bg-gray-50 ${className}`}
     >
       <span className="absolute left-0 block w-full h-0 transition-all bg-gray-800 opacity-100 group-hover:h-full top-1/2 group-hover:top-0 duration-400 ease"></span>
       <span className="absolute right-0 flex items-center justify-start w-8 h-8 duration-300 transform translate-x-full group-hover:translate-x-0 ease">

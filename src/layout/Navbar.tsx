@@ -1,10 +1,21 @@
-
+import {Link} from 'react-router-dom'
 
 const Navbar = () => {
     return (
-        <div>
-            navbar
+      <section className="grid md:grid-cols-2 grid-cols-1 md:gap-3">
+        <div className="px-10 py-2 bg-customGray flex justify-between items-center rounded-t-xl shadow-xl">
+          <h1 className="text-base font-medium underline underline-offset-4">
+            <span className="text-5xl font-bold">B</span>land
+          </h1>
+          <div className="md:flex gap-10 text-base uppercase hidden">
+            <Link to="/">Home</Link>
+            <Link to="/books">Books</Link>
+            <Link to="/">Signin</Link>
+            <Link to="/">Signup</Link>
+          </div>
         </div>
+        <div className="px-10 py-2 bg-customApricot rounded-t-xl shadow-xl hidden md:flex"></div>
+      </section>
     );
 };
 

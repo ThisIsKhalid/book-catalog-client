@@ -3,7 +3,22 @@ import { api } from "../api/apiSlice";
 const bookApi = api.injectEndpoints({
   endpoints: (builder) => ({
     getBooks: builder.query({
-      query: (params) => `/books/?searchTerm=${params}`,
+      query: (params) => {
+        const { searchTerm, genre } = params;
+        let queryString = "/books";
+
+        if (searchTerm) {
+          queryString += `/?searchTerm=${encodeURIComponent(searchTerm)}`;
+        }
+
+        if (genre) {
+          queryString += `${searchTerm ? "&" : "/?"}genre=${encodeURIComponent(
+            genre
+          )}`;
+        }
+
+        return queryString;
+      },
       providesTags: ["books"],
     }),
 

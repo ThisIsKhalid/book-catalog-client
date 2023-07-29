@@ -20,7 +20,7 @@ const BookCard = (book: BookCardProps) => {
           <strong>Publication Date:</strong> {publicationDate}
         </div>
         <div className="flex items-center justify-center mt-5">
-          <ButtonLink to={`/books/${_id}`} className="px-8 py-1">
+          <ButtonLink to={`/books/${_id}`} className="px-9 py-[2px]">
             See More
           </ButtonLink>
         </div>

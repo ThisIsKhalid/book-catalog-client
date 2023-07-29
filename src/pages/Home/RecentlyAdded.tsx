@@ -5,8 +5,10 @@ import { useRecentlyAddedQuery } from "../../redux/features/books/booksApi";
 import { BookCardProps } from "../../types/common";
 
 const RecentlyAdded = () => {
-
-  const { data, isLoading } = useRecentlyAddedQuery(undefined);
+  const { data, isLoading } = useRecentlyAddedQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+    pollingInterval: 30000,
+  });
 
   if (isLoading) {
     return <LoadingSpinner />;

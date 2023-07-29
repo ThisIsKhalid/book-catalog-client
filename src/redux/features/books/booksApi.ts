@@ -5,7 +5,10 @@ const bookApi = api.injectEndpoints({
     getBooks: builder.query({
       query: () => "/books",
     }),
+    recentlyAdded: builder.query({
+      query: () => "/books/?limit=3",
+    }),
   }),
 });
 
-export const { useGetBooksQuery } = bookApi;
+export const { useGetBooksQuery, useRecentlyAddedQuery } = bookApi;

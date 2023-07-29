@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 import { Link } from "react-router-dom";
 
 interface ButtonLinkProps {
@@ -7,7 +7,7 @@ interface ButtonLinkProps {
   className?: string;
 }
 
-const ButtonLink: React.FC<ButtonLinkProps> = ({ to, children, className }) => {
+const ButtonLink = ({ to, children, className }: ButtonLinkProps) => {
   return (
     <Link
       to={to}

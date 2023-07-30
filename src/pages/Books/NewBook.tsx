@@ -1,6 +1,8 @@
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import SubmitButton from "../../components/SubmitButton";
+import { usePostBookMutation } from "../../redux/features/books/booksApi";
+import SectionTitle from "../../components/SectionTitle";
 
 interface BookFormData {
   title: string;
@@ -10,6 +12,8 @@ interface BookFormData {
 }
 
 const NewBook: React.FC = () => {
+  const [postBook, { isLoading }] = usePostBookMutation();
+
   const {
     register,
     handleSubmit,
@@ -17,13 +21,17 @@ const NewBook: React.FC = () => {
   } = useForm<BookFormData>();
 
   const onSubmit: SubmitHandler<BookFormData> = (data) => {
-    console.log(data);
+    const user = "64c2b9b79c13a44020b3994d";
+    const bookData = { user, ...data };
+    // console.log(bookData);
+    postBook(bookData);
   };
 
   return (
-    <section className="">
-      <div className="md:w-1/2 w-full mx-auto">
-        <form onSubmit={handleSubmit(onSubmit)}>
+    <section className="my-10">
+      <div className="md:w-1/2 w-full mx-auto bg-customGray md:px-10 px-5 py-10 rounded-lg shadow-lg">
+        <SectionTitle title="Add New Book" />
+        <form onSubmit={handleSubmit(onSubmit)} className="-mt-10">
           <div>
             <label className="label">Title:</label>
             <input
@@ -32,7 +40,11 @@ const NewBook: React.FC = () => {
               className="input input-bordered input-success w-full"
               {...register("title", { required: "Title is required" })}
             />
-            {errors.title && <span>{errors.title.message}</span>}
+            {errors.title && (
+              <span className="text-red-500 text-sm font-medium">
+                {errors.title.message}
+              </span>
+            )}
           </div>
           <div>
             <label className="label">Author:</label>
@@ -42,7 +54,11 @@ const NewBook: React.FC = () => {
               className="input input-bordered input-success w-full"
               {...register("author", { required: "Author is required" })}
             />
-            {errors.author && <span>{errors.author.message}</span>}
+            {errors.author && (
+              <span className="text-red-500 text-sm font-medium">
+                {errors.author.message}
+              </span>
+            )}
           </div>
           <div>
             <label className="label">Genre:</label>
@@ -52,7 +68,11 @@ const NewBook: React.FC = () => {
               className="input input-bordered input-success w-full"
               {...register("genre", { required: "Genre is required" })}
             />
-            {errors.genre && <span>{errors.genre.message}</span>}
+            {errors.genre && (
+              <span className="text-red-500 text-sm font-medium">
+                {errors.genre.message}
+              </span>
+            )}
           </div>
           <div>
             <label className="label">Publication Date:</label>
@@ -64,11 +84,13 @@ const NewBook: React.FC = () => {
               })}
             />
             {errors.publicationDate && (
-              <span>{errors.publicationDate.message}</span>
+              <span className="text-red-500 text-sm font-medium">
+                {errors.publicationDate.message}
+              </span>
             )}
           </div>
           <div className="flex justify-center mt-5 ">
-            <SubmitButton buttonText="Submit" className="w-1/2" />
+            <SubmitButton buttonText="Submit" className="w-1/2" isLoading={isLoading} />
           </div>
         </form>
       </div>

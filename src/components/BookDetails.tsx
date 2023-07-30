@@ -1,13 +1,48 @@
+import { SubmitHandler, useForm } from "react-hook-form";
 import { ImCross } from "react-icons/im";
 import { useParams } from "react-router-dom";
-import { useGetSingleBookQuery } from "../redux/features/books/booksApi";
+import {
+  useGetSingleBookQuery,
+  usePostReviewMutation,
+} from "../redux/features/books/booksApi";
 import { IReview } from "../types/common";
 import LoadingSpinner from "./LoadingSpinner";
+import SubmitButton from "./SubmitButton";
+
+interface ReviewFormData {
+  rating: number | string;
+  comment: string;
+}
 
 const BookDetails = () => {
   const { id } = useParams();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ReviewFormData>();
 
+  const [postReview] = usePostReviewMutation();
   const { data, isLoading } = useGetSingleBookQuery(id);
+
+  const onSubmit: SubmitHandler<ReviewFormData> = (data) => {
+     const reviewerName = "khalid";
+     const reviewerEmail = "kh@gmail.com";
+     const rating =
+       typeof data.rating === "string"
+         ? parseInt(data.rating, 10)
+         : data.rating;
+
+     const reviewData: IReview = {
+       reviewerEmail,
+       reviewerName,
+       rating,
+       comment: data.comment
+     };
+
+    //  console.log(reviewData);
+     postReview({ id, reviewData });
+  };
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -48,13 +83,54 @@ const BookDetails = () => {
               open modal
             </button>
             <dialog id="review_modal" className="modal">
-              <form method="dialog" className="modal-box relative">
-                <h3 className="font-bold text-lg">Hello!</h3>
-                <p className="py-4">
-                  Press ESC key or click the button below to close
-                </p>
-                <div className="modal-action">
-                  <button className="btn">Close</button>
+              <form
+                method="dialog"
+                className="modal-box relative"
+                onSubmit={handleSubmit(onSubmit)}
+              >
+                <div>
+                  <label className="label">Comment:</label>
+                  <textarea
+                    {...register("comment", {
+                      required: "Comment is required",
+                    })}
+                    className="textarea textarea-success w-full"
+                    placeholder="Comment"
+                  ></textarea>
+                  {errors.comment && (
+                    <span className="text-sm text-red-500">
+                      {errors.comment.message}
+                    </span>
+                  )}
+                </div>
+                <div>
+                  <label className="label">Rating:</label>
+                  <input
+                    {...register("rating", {
+                      required: "Rating is required",
+                      min: { value: 1, message: "Rating should be at least 1" },
+                      max: { value: 5, message: "Rating should be at most 5" },
+                    })}
+                    type="number"
+                    name="rating"
+                    placeholder="Give Rating 1-5"
+                    className="input input-bordered input-success w-full"
+                  />
+                  {errors.rating && (
+                    <span className="text-sm text-red-500">
+                      {errors.rating.message}
+                    </span>
+                  )}
+                </div>
+                <div
+                  className="modal-action"
+                  onClick={() => {
+                    if (!errors.comment?.message && !errors.rating?.message) {
+                      return handleCloseModal();
+                    }
+                  }}
+                >
+                  <SubmitButton buttonText="add review" />
                 </div>
                 <p
                   className="absolute top-3 right-3 cursor-pointer"
@@ -66,7 +142,7 @@ const BookDetails = () => {
             </dialog>
           </div>
           <ul className="grid md:grid-cols-3 grid-cols-1 gap-3">
-            {data?.data.reviews.length > 1 ? (
+            {data?.data.reviews.length > 0 ? (
               data?.data.reviews.map((review: IReview, index: number) => (
                 <li
                   key={index}

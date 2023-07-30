@@ -3,6 +3,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import SubmitButton from "../../components/SubmitButton";
 import { usePostBookMutation } from "../../redux/features/books/booksApi";
 import SectionTitle from "../../components/SectionTitle";
+import { toast } from "react-toastify";
 
 interface BookFormData {
   title: string;
@@ -20,11 +21,14 @@ const NewBook: React.FC = () => {
     formState: { errors },
   } = useForm<BookFormData>();
 
-  const onSubmit: SubmitHandler<BookFormData> = (data) => {
+  const onSubmit: SubmitHandler<BookFormData> = (data, event) => {
     const user = "64c2b9b79c13a44020b3994d";
     const bookData = { user, ...data };
     // console.log(bookData);
     postBook(bookData);
+
+    toast.success("Book Added Successfully !");
+    event?.target.reset();
   };
 
   return (

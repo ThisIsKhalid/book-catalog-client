@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import BookCard from "../components/BookCard";
-import LoadingSpinner from "../components/LoadingSpinner";
-import SectionTitle from "../components/SectionTitle";
-import { useGetBooksQuery } from "../redux/features/books/booksApi";
-import { BookCardProps } from "../types/common";
+import { Link } from "react-router-dom";
+import BookCard from "../../components/BookCard";
+import LoadingSpinner from "../../components/LoadingSpinner";
+import SectionTitle from "../../components/SectionTitle";
+import { useGetBooksQuery } from "../../redux/features/books/booksApi";
+import { BookCardProps } from "../../types/common";
 
 const Books = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -60,6 +61,9 @@ const Books = () => {
           <option value="Drama">Drama</option>
           <option value="Fantasy">Fantasy</option>
         </select>
+        <Link to="/books/add-book">
+          <button className="btn btn-success">Add New Book</button>
+        </Link>
       </div>
       <div className="grid md:grid-cols-3 grid-cols-1 gap-5 md:px-10">
         {data?.data.length === 0 ? (

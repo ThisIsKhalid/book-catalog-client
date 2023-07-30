@@ -2,6 +2,7 @@ export type IReview = {
   rating: number;
   comment: string;
   reviewerEmail: string;
+  reviewerName: string;
 };
 
 export interface BookCardProps {

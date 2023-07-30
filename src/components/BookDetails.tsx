@@ -1,3 +1,4 @@
+import { ImCross } from "react-icons/im";
 import { useParams } from "react-router-dom";
 import { useGetSingleBookQuery } from "../redux/features/books/booksApi";
 import { IReview } from "../types/common";
@@ -11,6 +12,12 @@ const BookDetails = () => {
   if (isLoading) {
     return <LoadingSpinner />;
   }
+
+  const handleCloseModal = () => {
+    if (window.review_modal.open) {
+      window.review_modal.close();
+    }
+  };
 
   return (
     <section className="my-10">
@@ -32,7 +39,31 @@ const BookDetails = () => {
         <div className="mt-6">
           <div className="flex items-end justify-between border-b border-gray-800 mb-4 pb-2">
             <h2 className="text-xl font-semibold">Reviews :</h2>
-            <button className="btn btn-sm btn-success">Give a Review</button>
+
+            {/* Open the modal using ID.showModal() method */}
+            <button
+              className="btn btn-sm btn-success"
+              onClick={() => window.review_modal.showModal()}
+            >
+              open modal
+            </button>
+            <dialog id="review_modal" className="modal">
+              <form method="dialog" className="modal-box relative">
+                <h3 className="font-bold text-lg">Hello!</h3>
+                <p className="py-4">
+                  Press ESC key or click the button below to close
+                </p>
+                <div className="modal-action">
+                  <button className="btn">Close</button>
+                </div>
+                <p
+                  className="absolute top-3 right-3 cursor-pointer"
+                  onClick={handleCloseModal}
+                >
+                  <ImCross />
+                </p>
+              </form>
+            </dialog>
           </div>
           <ul className="grid md:grid-cols-3 grid-cols-1 gap-3">
             {data?.data.reviews.length > 1 ? (

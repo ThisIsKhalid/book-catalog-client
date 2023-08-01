@@ -1,10 +1,20 @@
 import { BsCart3 } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
 import { Link } from "react-router-dom";
-import { useAppSelector } from "../redux/hooks";
+import { toast } from "react-toastify";
+import { setUser } from "../redux/features/users/userSlice";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
 
 const Navbar = () => {
   const { user } = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
+
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    dispatch(setUser(null));
+
+    toast.success("User Logged out successfully..");
+  };
 
   return (
     <section className="grid md:grid-cols-2 grid-cols-1 md:gap-5">
@@ -18,7 +28,9 @@ const Navbar = () => {
 
           {user?.email ? (
             <>
-              <button className="uppercase">Logout</button>
+              <button onClick={handleLogout} className="uppercase">
+                Logout
+              </button>
             </>
           ) : (
             <>

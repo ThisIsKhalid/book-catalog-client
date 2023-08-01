@@ -1,7 +1,11 @@
+import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import SectionTitle from "../components/SectionTitle";
 import SubmitButton from "../components/SubmitButton";
-import { Link } from "react-router-dom";
+import { useUserLoginMutation } from "../redux/features/auth/authApi";
+import { useAppDispatch } from "../redux/hooks";
 
 type FormData = {
   email: string;
@@ -9,14 +13,39 @@ type FormData = {
 };
 
 const Login = () => {
+  const [userLogin, { isLoading, data, isSuccess, isError }] =
+    useUserLoginMutation();
+
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>();
 
-  const onSubmit: SubmitHandler<FormData> = (data) => {
-    console.log(data);
+  useEffect(() => {
+    if (isSuccess && data?.data.accessToken) {
+      //! set accessToken to localstorage here
+      localStorage.setItem("accessToken", data?.data.accessToken);
+
+      toast.success("Login successful!");
+      navigate("/");
+    }
+
+    if (isError && !isLoading) {
+      toast.error("Error during login. Please try again.");
+    }
+  }, [isSuccess, isError, isLoading, dispatch, data?.data, navigate]);
+
+  const onSubmit: SubmitHandler<FormData> = async (data, e) => {
+    try {
+      await userLogin(data);
+      e?.target.reset();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -29,8 +58,6 @@ const Login = () => {
       </div>
       <div className="-mt-5 md:w-1/2 w-full mx-auto bg-customGray p-10 rounded-lg shadow-lg">
         <form onSubmit={handleSubmit(onSubmit)} className="">
-          
-
           <div>
             <label className="label">Email:</label>
             <input

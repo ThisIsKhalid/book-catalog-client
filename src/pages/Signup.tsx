@@ -1,7 +1,10 @@
+import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import SectionTitle from "../components/SectionTitle";
 import SubmitButton from "../components/SubmitButton";
-import { Link } from "react-router-dom";
+import { useUserSignUpMutation } from "../redux/features/auth/authApi";
 
 type FormData = {
   name: string;
@@ -10,15 +13,35 @@ type FormData = {
 };
 
 const Signup = () => {
+  const [userSignUp, { isLoading, data, isSuccess, isError }] =
+    useUserSignUpMutation();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>();
 
-  const onSubmit: SubmitHandler<FormData> = (data) => {
-    console.log(data);
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("Signup successful!");
+    }
+
+    if (isError && !isLoading) {
+      toast.error("Error during signup. Please try again.");
+    }
+  }, [isSuccess, isError, isLoading]);
+
+  const onSubmit: SubmitHandler<FormData> = async (data, e) => {
+    try {
+      await userSignUp(data);
+      e?.target.reset();
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  // console.log(data);
 
   return (
     <div className="py-10">
@@ -88,13 +111,23 @@ const Signup = () => {
           </div>
 
           <div className="flex justify-center mt-5 ">
-            <SubmitButton buttonText="Signup" className="w-1/2" />
+            <SubmitButton
+              buttonText="Signup"
+              className="w-1/2"
+              isLoading={isLoading}
+            />
           </div>
         </form>
 
         <div className="mt-10 text-center">
           <p className="text-sm">
-            If you already have an account then go to <Link to="/login" className="text-blue-500 font-semibold underline underline-offset-4">Login</Link>{" "}
+            If you already have an account then go to{" "}
+            <Link
+              to="/login"
+              className="text-blue-500 font-semibold underline underline-offset-4"
+            >
+              Login
+            </Link>{" "}
             page.
           </p>
         </div>

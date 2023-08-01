@@ -1,5 +1,7 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import { ImCross } from "react-icons/im";
+import { FiEdit2 } from "react-icons/fi";
+import { AiOutlineDelete } from "react-icons/ai";
 import { useParams } from "react-router-dom";
 import {
   useGetSingleBookQuery,
@@ -56,7 +58,11 @@ const BookDetails = () => {
 
   return (
     <section className="my-10">
-      <div className="md:w-3/4 w-full mx-auto bg-customApricot rounded-lg shadow-md p-6">
+      <div className="md:w-3/4 w-full mx-auto bg-customApricot rounded-lg shadow-md p-6 relative">
+        <div className="flex items-end gap-2 text-xl absolute top-3 right-3">
+          <FiEdit2 />
+          <AiOutlineDelete />
+        </div>
         <h1 className="text-2xl font-semibold text-center mb-5 uppercase">
           {data?.data.title}
         </h1>

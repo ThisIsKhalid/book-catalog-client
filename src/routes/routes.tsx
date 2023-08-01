@@ -1,11 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
+import BookDetails from "../components/BookDetails";
 import Books from "../pages/Books/Books";
 import NewBook from "../pages/Books/NewBook";
 import Home from "../pages/Home/Home";
-import Signin from "../pages/Signin";
+import Login from "../pages/Login";
 import Signup from "../pages/Signup";
-import BookDetails from "../components/BookDetails";
 
 const router = createBrowserRouter([
   {
@@ -28,15 +28,15 @@ const router = createBrowserRouter([
         path: "/books/add-book",
         element: <NewBook />,
       },
+      {
+        path: "/signup",
+        element: <Signup />,
+      },
+      {
+        path: "/login",
+        element: <Login />,
+      },
     ],
-  },
-  {
-    path: "/login",
-    element: <Signin />,
-  },
-  {
-    path: "/signup",
-    element: <Signup />,
   },
 ]);
 

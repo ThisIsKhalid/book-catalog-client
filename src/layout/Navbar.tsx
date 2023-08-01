@@ -1,4 +1,4 @@
-import { BsCart3 } from "react-icons/bs";
+import { BsBookmarkHeartFill } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -41,8 +41,10 @@ const Navbar = () => {
         </div>
       </div>
       <div className="px-10 py-2 bg-customApricot rounded-t-xl shadow-lg hidden md:flex items-center justify-end gap-5 font-medium text-xl">
-        <div className="tooltip" data-tip="Cart">
-          <BsCart3 />
+        <div className="tooltip" data-tip="Wishlist">
+          <Link to='/wishlist'>
+            <BsBookmarkHeartFill />
+          </Link>
         </div>
         <div className="tooltip" data-tip="Profile">
           <CgProfile />

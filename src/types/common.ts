@@ -17,4 +17,5 @@ export interface BookCardProps {
     email: string;
   };
   reviews?: IReview[];
+  quantity?: number;
 }

@@ -1,6 +1,5 @@
 import { api } from "../api/apiSlice";
 
-
 const authApi = api.injectEndpoints({
   endpoints: (builder) => ({
     userSignUp: builder.mutation({
@@ -9,6 +8,7 @@ const authApi = api.injectEndpoints({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["users"],
     }),
     userLogin: builder.mutation({
       query: (data) => ({
@@ -16,9 +16,22 @@ const authApi = api.injectEndpoints({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["users"],
+    }),
+    getUserDetails: builder.query({
+      query: (accessToken) => ({
+        url: "/users/get-user",
+        headers: {
+          Authorization: `${accessToken}`,
+        },
+      }),
+      providesTags: ["users"],
     }),
   }),
 });
 
-
-export const {useUserSignUpMutation, useUserLoginMutation} = authApi;
+export const {
+  useUserSignUpMutation,
+  useUserLoginMutation,
+  useGetUserDetailsQuery,
+} = authApi;

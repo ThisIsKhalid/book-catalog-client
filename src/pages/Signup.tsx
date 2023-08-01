@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import SectionTitle from "../components/SectionTitle";
 import SubmitButton from "../components/SubmitButton";
 import { useUserSignUpMutation } from "../redux/features/auth/authApi";
+import { useAppDispatch } from "../redux/hooks";
 
 type FormData = {
   name: string;
@@ -16,6 +17,9 @@ const Signup = () => {
   const [userSignUp, { isLoading, data, isSuccess, isError }] =
     useUserSignUpMutation();
 
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -23,14 +27,18 @@ const Signup = () => {
   } = useForm<FormData>();
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && data?.data.accessToken) {
+      //! set accessToken to localstorage here
+      localStorage.setItem("accessToken", data?.data.accessToken);
+
       toast.success("Signup successful!");
+      navigate("/");
     }
 
     if (isError && !isLoading) {
       toast.error("Error during signup. Please try again.");
     }
-  }, [isSuccess, isError, isLoading]);
+  }, [isSuccess, isError, isLoading, dispatch, data?.data, navigate]);
 
   const onSubmit: SubmitHandler<FormData> = async (data, e) => {
     try {
@@ -40,8 +48,6 @@ const Signup = () => {
       console.log(error);
     }
   };
-
-  // console.log(data);
 
   return (
     <div className="py-10">

@@ -32,13 +32,13 @@ const Footer = () => {
             <h3 className="text-xl font-medium">Product</h3>
             <ul className="flex flex-col gap-2 mt-4 text-gray-300">
               <li>
-                <Link>Pricing</Link>
+                <Link to="/">Pricing</Link>
               </li>
               <li>
-                <Link>Features</Link>
+                <Link to="/">Features</Link>
               </li>
               <li>
-                <Link>Integrations</Link>
+                <Link to="/">Integrations</Link>
               </li>
             </ul>
           </div>

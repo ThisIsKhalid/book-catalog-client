@@ -1,6 +1,6 @@
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import {  useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import SectionTitle from "../../components/SectionTitle";
 import SubmitButton from "../../components/SubmitButton";
@@ -18,6 +18,8 @@ interface BookFormData {
 
 const EditBook: React.FC = () => {
   const { id } = useParams();
+  const accessToken = localStorage.getItem("accessToken");
+  console.log(accessToken);
 
   const { data } = useGetSingleBookQuery(id);
   const [patchBook, { isLoading }] = usePatchBookMutation();
@@ -35,9 +37,15 @@ const EditBook: React.FC = () => {
     },
   });
 
-  const onSubmit: SubmitHandler<BookFormData> = (data) => {
-    patchBook({ id, data });
-    toast.success("Book Updated Successfully !");
+  const onSubmit: SubmitHandler<BookFormData> = async (data) => {
+    if (accessToken) {
+      const response = await patchBook({ id, data, accessToken });
+      if ("error" in response) {
+        toast.error("You are not the publisher.");
+      } else {
+        toast.success("Book updated");
+      }
+    }
   };
 
   return (

@@ -10,6 +10,7 @@ const authApi = api.injectEndpoints({
       }),
       invalidatesTags: ["users"],
     }),
+
     userLogin: builder.mutation({
       query: (data) => ({
         url: "/auth/login",
@@ -18,6 +19,7 @@ const authApi = api.injectEndpoints({
       }),
       invalidatesTags: ["users"],
     }),
+
     getUserDetails: builder.query({
       query: (accessToken) => ({
         url: "/users/get-user",
@@ -25,7 +27,7 @@ const authApi = api.injectEndpoints({
           Authorization: `${accessToken}`,
         },
       }),
-      providesTags: ["users"],
+      providesTags: ["users", "books"],
     }),
   }),
 });

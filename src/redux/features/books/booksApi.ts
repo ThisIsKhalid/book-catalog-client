@@ -42,8 +42,11 @@ const bookApi = api.injectEndpoints({
     }),
 
     patchBook: builder.mutation({
-      query: ({ id, data }) => ({
+      query: ({ id, data, accessToken }) => ({
         url: `/books/edit-book/${id}`,
+        headers: {
+          Authorization: `${accessToken}`,
+        },
         method: "PATCH",
         body: data,
       }),

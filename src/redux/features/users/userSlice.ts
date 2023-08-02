@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 interface IUser {
   user: {
@@ -6,6 +6,7 @@ interface IUser {
     name: string | null;
     email: string | null;
   };
+  isLoading: boolean;
 }
 
 const initialState: IUser = {
@@ -14,18 +15,22 @@ const initialState: IUser = {
     name: null,
     email: null,
   },
+  isLoading: false,
 };
 
 const userSlice = createSlice({
   name: "user",
-  initialState, 
+  initialState,
   reducers: {
-    setUser : (state, action) => {
-        state.user = action.payload
-    }
-  }
+    setUser: (state, action) => {
+      state.user = action.payload;
+    },
+    setLoading: (state, action: PayloadAction<boolean>) => {
+      state.isLoading = action.payload;
+    },
+  },
 });
 
-export const { setUser} = userSlice.actions
+export const { setUser, setLoading } = userSlice.actions;
 
-export default userSlice.reducer
+export default userSlice.reducer;

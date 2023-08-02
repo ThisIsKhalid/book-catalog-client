@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import MainLayout from "./layout/MainLayout";
 import { useGetUserDetailsQuery } from "./redux/features/auth/authApi";
-import { setUser } from "./redux/features/users/userSlice";
+import { setLoading, setUser } from "./redux/features/users/userSlice";
 import { useAppDispatch } from "./redux/hooks";
 
 function App() {
@@ -14,6 +14,8 @@ function App() {
   });
 
   useEffect(() => {
+    dispatch(setLoading(true));
+
     if (accessToken && data?.data) {
       const user = {
         _id: data?.data._id,
@@ -22,6 +24,7 @@ function App() {
       };
 
       dispatch(setUser(user));
+      dispatch(setLoading(false));
     }
   }, [dispatch, accessToken, data?.data]);
 

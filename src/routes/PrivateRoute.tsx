@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { Navigate, useLocation } from "react-router-dom";
+import LoadingSpinner from "../components/LoadingSpinner";
 import { useAppSelector } from "../redux/hooks";
 
 interface IProps {
@@ -7,11 +8,15 @@ interface IProps {
 }
 
 const PrivateRoute = ({ children }: IProps) => {
-  const { user } = useAppSelector((state) => state.user);
+  const { user, isLoading } = useAppSelector((state) => state.user);
   const location = useLocation();
 
-  if (!user?.email) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
+
+  if (!user) {
+    return <Navigate to="/login" state={{ from: location }} replace></Navigate>;
   }
 
   return children;

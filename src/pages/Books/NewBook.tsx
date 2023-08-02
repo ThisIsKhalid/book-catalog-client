@@ -5,6 +5,7 @@ import { usePostBookMutation } from "../../redux/features/books/booksApi";
 import SectionTitle from "../../components/SectionTitle";
 import { toast } from "react-toastify";
 import { useAppSelector } from "../../redux/hooks";
+import { useNavigate } from "react-router-dom";
 
 interface BookFormData {
   title: string;
@@ -16,6 +17,7 @@ interface BookFormData {
 const NewBook: React.FC = () => {
   const [postBook, { isLoading }] = usePostBookMutation();
   const {user: loggedUser} = useAppSelector(state => state.user)
+  const navigate = useNavigate();
 
   const {
     register,
@@ -23,14 +25,19 @@ const NewBook: React.FC = () => {
     formState: { errors },
   } = useForm<BookFormData>();
 
-  const onSubmit: SubmitHandler<BookFormData> = (data, event) => {
+  const onSubmit: SubmitHandler<BookFormData> =async (data, event) => {
     const user = loggedUser?._id;
     const bookData = { user, ...data };
     // console.log(bookData);
-    postBook(bookData);
+     try {
+       await postBook(bookData);
 
-    toast.success("Book Added Successfully !");
-    event?.target.reset();
+       toast.success("Book Added Successfully !");
+       event?.target.reset()
+       navigate("/books");
+     } catch (error) {
+       toast.error("Error adding the book.");
+     }
   };
 
   return (

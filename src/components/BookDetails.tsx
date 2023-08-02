@@ -1,9 +1,11 @@
 import { SubmitHandler, useForm } from "react-hook-form";
-import { ImCross } from "react-icons/im";
-import { FiEdit2 } from "react-icons/fi";
 import { AiOutlineDelete } from "react-icons/ai";
-import { Link, useParams } from "react-router-dom";
+import { FiEdit2 } from "react-icons/fi";
+import { ImCross } from "react-icons/im";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import {
+  useDeleteBookMutation,
   useGetSingleBookQuery,
   usePostReviewMutation,
 } from "../redux/features/books/booksApi";
@@ -24,26 +26,28 @@ const BookDetails = () => {
     formState: { errors },
   } = useForm<ReviewFormData>();
 
+  const navigate = useNavigate()
+  const accessToken = localStorage.getItem("accessToken");
+
   const [postReview] = usePostReviewMutation();
   const { data, isLoading } = useGetSingleBookQuery(id);
+  const [deleteBook] = useDeleteBookMutation();
 
   const onSubmit: SubmitHandler<ReviewFormData> = (data) => {
-     const reviewerName = "khalid";
-     const reviewerEmail = "kh@gmail.com";
-     const rating =
-       typeof data.rating === "string"
-         ? parseInt(data.rating, 10)
-         : data.rating;
+    const reviewerName = "khalid";
+    const reviewerEmail = "kh@gmail.com";
+    const rating =
+      typeof data.rating === "string" ? parseInt(data.rating, 10) : data.rating;
 
-     const reviewData: IReview = {
-       reviewerEmail,
-       reviewerName,
-       rating,
-       comment: data.comment
-     };
+    const reviewData: IReview = {
+      reviewerEmail,
+      reviewerName,
+      rating,
+      comment: data.comment,
+    };
 
     //  console.log(reviewData);
-     postReview({ id, reviewData });
+    postReview({ id, reviewData });
   };
 
   if (isLoading) {
@@ -56,6 +60,19 @@ const BookDetails = () => {
     }
   };
 
+   const handleDeleteBook = async () => {
+     if (accessToken) {
+       const response = await deleteBook({ id, accessToken });
+       if ("error" in response) {
+         toast.error("You are not the publisher.");
+       } else {
+         toast.success("Book deleted");
+
+         navigate("/books");
+       }
+     }
+   };
+
   return (
     <section className="my-10">
       <div className="md:w-3/4 w-full mx-auto bg-customApricot rounded-lg shadow-md p-6 relative">
@@ -65,7 +82,11 @@ const BookDetails = () => {
               <FiEdit2 />
             </Link>
           </div>
-          <div className="cursor-pointer tooltip" data-tip="Delete Book">
+          <div
+            className="cursor-pointer tooltip"
+            data-tip="Delete Book"
+            onClick={handleDeleteBook}
+          >
             <AiOutlineDelete />
           </div>
         </div>

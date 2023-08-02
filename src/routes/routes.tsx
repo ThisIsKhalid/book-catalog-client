@@ -2,12 +2,13 @@ import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
 import BookDetails from "../components/BookDetails";
 import Books from "../pages/Books/Books";
+import EditBook from "../pages/Books/EditBook";
 import NewBook from "../pages/Books/NewBook";
 import Home from "../pages/Home/Home";
 import Login from "../pages/Login";
 import Signup from "../pages/Signup";
-import PrivateRoute from "./PrivateRoute";
 import WishList from "../pages/WishList";
+import PrivateRoute from "./PrivateRoute";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,14 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <NewBook />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/books/edit-book/:id",
+        element: (
+          <PrivateRoute>
+            <EditBook />
           </PrivateRoute>
         ),
       },

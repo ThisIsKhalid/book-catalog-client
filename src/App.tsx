@@ -16,6 +16,7 @@ function App() {
   useEffect(() => {
     if (accessToken && data?.data) {
       const user = {
+        _id: data?.data._id,
         name: data?.data.name,
         email: data?.data.email,
       };

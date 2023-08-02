@@ -1,10 +1,13 @@
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import SubmitButton from "../../components/SubmitButton";
-import { usePostBookMutation } from "../../redux/features/books/booksApi";
-import SectionTitle from "../../components/SectionTitle";
+import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useAppSelector } from "../../redux/hooks";
+import SectionTitle from "../../components/SectionTitle";
+import SubmitButton from "../../components/SubmitButton";
+import {
+  useGetSingleBookQuery,
+  usePatchBookMutation,
+} from "../../redux/features/books/booksApi";
 
 interface BookFormData {
   title: string;
@@ -13,30 +16,34 @@ interface BookFormData {
   publicationDate: string;
 }
 
-const NewBook: React.FC = () => {
-  const [postBook, { isLoading }] = usePostBookMutation();
-  const {user: loggedUser} = useAppSelector(state => state.user)
+const EditBook: React.FC = () => {
+  const { id } = useParams();
+
+  const { data } = useGetSingleBookQuery(id);
+  const [patchBook, { isLoading }] = usePatchBookMutation();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<BookFormData>();
+  } = useForm<BookFormData>({
+    defaultValues: {
+      title: data?.data.title || "",
+      author: data?.data.author || "",
+      genre: data?.data.genre || "",
+      publicationDate: data?.data.publicationDate || "",
+    },
+  });
 
-  const onSubmit: SubmitHandler<BookFormData> = (data, event) => {
-    const user = loggedUser?._id;
-    const bookData = { user, ...data };
-    // console.log(bookData);
-    postBook(bookData);
-
-    toast.success("Book Added Successfully !");
-    event?.target.reset();
+  const onSubmit: SubmitHandler<BookFormData> = (data) => {
+    patchBook({ id, data });
+    toast.success("Book Updated Successfully !");
   };
 
   return (
     <section className="my-10">
       <div className="md:w-1/2 w-full mx-auto bg-customGray md:px-10 px-5 py-10 rounded-lg shadow-lg">
-        <SectionTitle title="Add New Book" />
+        <SectionTitle title="Edit Book" />
         <form onSubmit={handleSubmit(onSubmit)} className="-mt-10">
           <div>
             <label className="label">Title:</label>
@@ -96,7 +103,11 @@ const NewBook: React.FC = () => {
             )}
           </div>
           <div className="flex justify-center mt-5 ">
-            <SubmitButton buttonText="Submit" className="w-1/2" isLoading={isLoading} />
+            <SubmitButton
+              buttonText="Submit"
+              className="w-1/2"
+              isLoading={isLoading}
+            />
           </div>
         </form>
       </div>
@@ -104,4 +115,4 @@ const NewBook: React.FC = () => {
   );
 };
 
-export default NewBook;
+export default EditBook;

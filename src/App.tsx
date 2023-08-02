@@ -8,7 +8,7 @@ function App() {
   const dispatch = useAppDispatch();
   const accessToken = localStorage.getItem("accessToken");
 
-  const { data } = useGetUserDetailsQuery(accessToken || "", {
+  const { data } = useGetUserDetailsQuery(accessToken, {
     refetchOnMountOrArgChange: true,
     pollingInterval: 30000,
   });

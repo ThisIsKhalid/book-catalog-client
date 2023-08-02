@@ -55,7 +55,7 @@ const BookCard = (book: BookCardProps) => {
 
   return (
     <div className="bg-customApricot rounded-lg shadow-lg p-4 relative">
-      <div className="absolute top-2 right-2 flex gap-2">
+      <div className="absolute top-2 right-2 flex lg:flex-row flex-col gap-2">
         <div
           className="cursor-pointer tooltip tooltip-error"
           data-tip="Add to Wishlist"

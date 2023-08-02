@@ -9,6 +9,7 @@ import {
   useGetSingleBookQuery,
   usePostReviewMutation,
 } from "../redux/features/books/booksApi";
+import { useAppSelector } from "../redux/hooks";
 import { IReview } from "../types/common";
 import LoadingSpinner from "./LoadingSpinner";
 import SubmitButton from "./SubmitButton";
@@ -26,28 +27,36 @@ const BookDetails = () => {
     formState: { errors },
   } = useForm<ReviewFormData>();
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const accessToken = localStorage.getItem("accessToken");
+  const { user } = useAppSelector((state) => state.user);
 
   const [postReview] = usePostReviewMutation();
   const { data, isLoading } = useGetSingleBookQuery(id);
   const [deleteBook] = useDeleteBookMutation();
 
   const onSubmit: SubmitHandler<ReviewFormData> = (data) => {
-    const reviewerName = "khalid";
-    const reviewerEmail = "kh@gmail.com";
-    const rating =
-      typeof data.rating === "string" ? parseInt(data.rating, 10) : data.rating;
+    if (user?.name && user?.email) {
+      const reviewerName = user?.name;
+      const reviewerEmail = user?.email;
+      const rating =
+        typeof data.rating === "string"
+          ? parseInt(data.rating, 10)
+          : data.rating;
 
-    const reviewData: IReview = {
-      reviewerEmail,
-      reviewerName,
-      rating,
-      comment: data.comment,
-    };
+      const reviewData: IReview = {
+        reviewerEmail,
+        reviewerName,
+        rating,
+        comment: data.comment,
+      };
 
-    //  console.log(reviewData);
-    postReview({ id, reviewData });
+      //  console.log(reviewData);
+      postReview({ id, reviewData });
+      toast.success("Review added.");
+    } else {
+      toast.error("Please Login!");
+    }
   };
 
   if (isLoading) {
@@ -60,18 +69,18 @@ const BookDetails = () => {
     }
   };
 
-   const handleDeleteBook = async () => {
-     if (accessToken) {
-       const response = await deleteBook({ id, accessToken });
-       if ("error" in response) {
-         toast.error("You are not the publisher.");
-       } else {
-         toast.success("Book deleted");
+  const handleDeleteBook = async () => {
+    if (accessToken) {
+      const response = await deleteBook({ id, accessToken });
+      if ("error" in response) {
+        toast.error("You are not the publisher.");
+      } else {
+        toast.success("Book deleted");
 
-         navigate("/books");
-       }
-     }
-   };
+        navigate("/books");
+      }
+    }
+  };
 
   return (
     <section className="my-10">

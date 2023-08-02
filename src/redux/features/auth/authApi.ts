@@ -27,7 +27,7 @@ const authApi = api.injectEndpoints({
           Authorization: `${accessToken}`,
         },
       }),
-      providesTags: ["users", "books"],
+      providesTags: ["users"],
     }),
   }),
 });

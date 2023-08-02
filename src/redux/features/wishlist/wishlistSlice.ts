@@ -1,12 +1,18 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { BookCardProps } from "../../../types/common";
 
-interface IWishList {
+interface IWishlistState {
   books: BookCardProps[];
+  currentlyReading: BookCardProps[];
+  planToRead: BookCardProps[];
+  finishedReading: BookCardProps[];
 }
 
-const initialState: IWishList = {
+const initialState: IWishlistState = {
   books: [],
+  currentlyReading: [],
+  planToRead: [],
+  finishedReading: [],
 };
 
 const wishlistSlice = createSlice({
@@ -14,20 +20,36 @@ const wishlistSlice = createSlice({
   initialState,
   reducers: {
     addToWishlist: (state, action: PayloadAction<BookCardProps>) => {
-      const existing = state.books.find(
-        (book) => book._id === action.payload._id
-      );
+      if (!state.books.some((book) => book._id === action.payload._id)) {
+        state.books.push(action.payload);
+      }
+    },
 
-      if (existing) {
-        //* => ! is meaning that this things never gone undefined
-        existing.quantity = existing.quantity! + 1;
-      } else {
-        state.books.push({ ...action.payload, quantity: 1 });
+    addToCurrentlyReading: (state, action: PayloadAction<BookCardProps>) => {
+      if (
+        !state.currentlyReading.some((book) => book._id === action.payload._id)
+      ) {
+        state.currentlyReading.push(action.payload);
+      }
+    },
+
+    addToFinishedReading: (state, action: PayloadAction<BookCardProps>) => {
+      
+
+      if (
+        !state.finishedReading.some((book) => book._id === action.payload._id)
+      ) {
+        state.currentlyReading = state.currentlyReading.filter(
+          (book) => book._id !== action.payload._id
+        );
+        
+        state.finishedReading.push(action.payload);
       }
     },
   },
 });
 
-export const { addToWishlist } = wishlistSlice.actions;
+export const { addToWishlist, addToCurrentlyReading, addToFinishedReading } =
+  wishlistSlice.actions;
 
 export default wishlistSlice.reducer;
